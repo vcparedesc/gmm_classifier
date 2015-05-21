@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(gmm_classifier)
+set(CMAKE_CXX_FLAGS "-O2") 
+add_definitions(-std=c++0x)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -8,6 +10,9 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
+  yaml_eigen_utilities
+  roslib_utilities
+  yaml_eigen_utilities
 )
 
 ## System dependencies are found with CMake's conventions
@@ -80,10 +85,10 @@ find_package(catkin REQUIRED COMPONENTS
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES gmm_classifier
-#  CATKIN_DEPENDS roscpp rospy std_msgs
-#  DEPENDS system_lib
+  INCLUDE_DIRS include
+  LIBRARIES gmm_classifier
+  CATKIN_DEPENDS roscpp rospy std_msgs
+  DEPENDS system_lib
 )
 
 ###########
@@ -95,24 +100,33 @@ catkin_package(
 # include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
+  include
 )
 
 ## Declare a cpp library
-# add_library(gmm_classifier
-#   src/${PROJECT_NAME}/gmm_classifier.cpp
-# )
+ add_library(gmm_classifier
+   src/gmm_classifier.cpp include/gmm_classifier.hpp
+ )
+
+  target_link_libraries(gmm_classifier
+   ${catkin_LIBRARIES}
+ )
 
 ## Declare a cpp executable
-# add_executable(gmm_classifier_node src/gmm_classifier_node.cpp)
+ add_executable(gmm_example src/gmm_example.cpp)
+ target_link_libraries(gmm_example
+ ${catkin_LIBRARIES}
+ gmm_classifier
+ )
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(gmm_classifier_node gmm_classifier_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(gmm_classifier_node
-#   ${catkin_LIBRARIES}
-# )
+
+
+
 
 #############
 ## Install ##
