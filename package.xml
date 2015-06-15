@@ -46,6 +46,10 @@
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
+  <build_depend>yaml_eigen_utilities</build_depend>
+  <run_depend>yaml_eigen_utilities</run_depend>
+  <build_depend>roslib_utilities</build_depend>
+  <run_depend>roslib_utilities</run_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

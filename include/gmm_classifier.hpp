@@ -1,3 +1,6 @@
+#ifndef GAUSSIAN_MIXTURE_HPP
+#define GAUSSIAN_MIXTURE_HPP
+
 #include <iostream>
 #include <stdio.h>
 #include <yaml_eigen_utilities/yaml_eigen_utilities.hpp>
@@ -37,21 +40,23 @@ class BEHAVIOR{
   static inline void Load(string address, Modelp &behavior)
   {
   Node bCluster;
-  VectorXd scalar;
+  double scalar;
   string filepath = roslib_utilities::resolve_local_url(address.c_str()).string();
   yaml_utilities::yaml_read_file(filepath, bCluster);
 
   const Node &nclusters = bCluster["nClusters"];
+
   nclusters >> scalar;
+
   const Node &mu = bCluster["mu"];
-  behavior.nClusters = scalar(0);
-  behavior.sigma = new MatrixXd[(int)scalar(0)];
-  behavior.sigma_inv = new MatrixXd[(int)scalar(0)];
-  behavior.sigma_det = new double[(int)scalar(0)];
-  behavior.mu.resize((int) scalar(0), features);
-  behavior.phi.resize((int) scalar(0));
-  
-  for(int i = 1; i <= scalar(0); i++)
+  behavior.nClusters = scalar;
+  behavior.sigma = new MatrixXd[(int)scalar];
+  behavior.sigma_inv = new MatrixXd[(int)scalar];
+  behavior.sigma_det = new double[(int)scalar];
+  behavior.mu.resize((int) scalar, features);
+  behavior.phi.resize((int) scalar);
+
+  for(int i = 1; i <= scalar; i++)
   {
     string temp = "sigma";
     char *cstr = &temp[0u];
@@ -88,3 +93,5 @@ public:
   double evalGmm(Behaviors::MODE mode, VectorXd features_vector);
 
 };
+
+#endif

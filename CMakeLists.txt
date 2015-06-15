@@ -12,7 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   yaml_eigen_utilities
   roslib_utilities
-  yaml_eigen_utilities
 )
 
 ## System dependencies are found with CMake's conventions
@@ -87,7 +86,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES gmm_classifier
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs yaml_eigen_utilities roslib_utilities
   DEPENDS system_lib
 )
 
