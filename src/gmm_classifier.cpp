@@ -25,7 +25,7 @@ gmm_classifier::~gmm_classifier()
 double gmm_classifier::evalGmm(Behaviors::MODE mode, VectorXd features_vector)
 {
   double result = 0;
-  std::cout<<"Entering evalGmm"<<std::endl;
+
   for (int i = 0; i < Models[mode].nClusters; i ++)
   {
     result += Models[mode].phi[i] * NDgaussian(mode, i, features_vector);
@@ -40,7 +40,7 @@ double gmm_classifier::NDgaussian(Behaviors::MODE mode, int n_cluster, VectorXd 
   VectorXd vec;
 
   vec = (features_vector.transpose() - Models[mode].mu.block(n_cluster,0,1,8)).transpose();
-  std::cout<<"Test Mean diff"<<vec<<std::endl;
+
   result = 1 / sqrt( pow(2 * 3.141516,8) * Models[mode].sigma_det[n_cluster]) * exp((double)(-0.5 * vec.transpose() * Models[mode].sigma_inv[n_cluster] * vec));
 
   return result;
