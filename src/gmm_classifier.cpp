@@ -3,11 +3,18 @@
 gmm_classifier::gmm_classifier()
 {
   Models = new Modelp[3];
+  Probabilities = VectorXd::Zero(3);
 
 	// Load Parameters using meta template
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Standing.yaml",Models[0]);
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Stand2Walk.yaml",Models[1]);
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Walk2Stand.yaml",Models[2]);
+
+  nBehaviors = 3;
+  nFeatures = Models[0].mu.rows();
+  Probabilities = VectorXd::Zero(nBehaviors);
+
+
 }
 
 gmm_classifier::~gmm_classifier()
@@ -37,4 +44,46 @@ double gmm_classifier::NDgaussian(Behaviors::MODE mode, int n_cluster, VectorXd 
   result = 1 / sqrt( pow(2 * 3.141516,8) * Models[mode].sigma_det[n_cluster]) * exp(-0.5 * vec.transpose() * Models[mode].sigma_inv[n_cluster] * vec);
 
   return result;
+}
+
+void gmm_classifier::accumulate_points(VectorXd features_vector)
+{
+  for(int i = 0; i < nBehaviors; i++)
+    {
+      // Using log(1+value) to reduce values.
+      Probabilities(i) = Probabilities(i) + log(evalGmm((Behaviors::MODE)i,features_vector) + 1);
+    }
+}
+
+ResultGmm gmm_classifier::pop_gmm_results()
+{
+  ResultGmm result;
+  result.NormalizedProb = VectorXd::Zero(nBehaviors);
+  int Index = 0;
+  double temp;
+
+
+  temp = Probabilities(0);
+  for (int i = 0; i < nBehaviors; i++)
+    {
+      if(temp > Probabilities(i))
+        {
+          temp = Probabilities(i);
+          Index = i;
+        }
+    }
+  result.winner_mode = (Behaviors::MODE)Index;
+  Probabilities.normalize();
+  result.NormalizedProb = Probabilities;
+
+  // Reset Values
+  Probabilities = VectorXd::Zero(nBehaviors);
+  current_mode = result.winner_mode;
+
+  return result;
+}
+
+void gmm_classifier::reset_probabilities()
+{
+  Probabilities = VectorXd::Zero(nBehaviors);
 }

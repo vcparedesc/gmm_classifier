@@ -34,6 +34,12 @@ struct Modelp
   int nClusters;
 };
 
+struct ResultGmm
+{
+  Behaviors::MODE winner_mode;
+  VectorXd NormalizedProb;
+};
+
 template< int features > 
 class BEHAVIOR{
 	public:
@@ -81,16 +87,23 @@ class BEHAVIOR{
 
 class gmm_classifier{
 private:
-	int nFeatures;
-	int nBehaviors;
-	int currentBehavior;
+  int nFeatures;
+  int nBehaviors;
+  int currentBehavior;
   double NDgaussian(Behaviors::MODE mode, int n_cluster, VectorXd features_vector);
+
+  Behaviors::MODE current_mode;
 
 public:
   Modelp* Models;
-	gmm_classifier();
+  gmm_classifier();
   ~gmm_classifier();
   double evalGmm(Behaviors::MODE mode, VectorXd features_vector);
+  void accumulate_points(VectorXd features_vector);
+  ResultGmm pop_gmm_results();
+  void reset_probabilities();
+
+  VectorXd Probabilities;
 
 };
 
