@@ -60,7 +60,7 @@ class BEHAVIOR{
   behavior.sigma_inv = new MatrixXd[(int)scalar];
   behavior.sigma_det = new double[(int)scalar];
   behavior.mu.resize((int) scalar, features);
-  behavior.phi.resize((int) scalar);
+  behavior.phi = VectorXd::Zero((int) scalar);
 
   for(int i = 1; i <= scalar; i++)
   {
@@ -80,7 +80,15 @@ class BEHAVIOR{
   const Node &phi = bCluster["phi"]; 
 
   mu >> behavior.mu;
-  phi >> behavior.phi;
+
+  if((int)scalar == 1)
+    {
+      double temp;
+      phi >> temp;
+      behavior.phi(0) = temp;
+    }else{
+      phi >> behavior.phi;
+    }
 
   }		
 };

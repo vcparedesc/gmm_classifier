@@ -39,7 +39,13 @@ double gmm_classifier::NDgaussian(Behaviors::MODE mode, int n_cluster, VectorXd 
   double result;
   VectorXd vec;
 
-  vec = (features_vector.transpose() - Models[mode].mu.block(n_cluster,0,1,8)).transpose();
+  if(Models[mode].nClusters != 1)
+    {
+      vec = (features_vector.transpose() - Models[mode].mu.block(n_cluster,0,1,8)).transpose();
+    }else{
+      vec = (features_vector.transpose() - Models[mode].mu.transpose()).transpose();
+    }
+
 
   result = 1 / sqrt( pow(2 * 3.141516,8) * Models[mode].sigma_det[n_cluster]) * exp((double)(-0.5 * vec.transpose() * Models[mode].sigma_inv[n_cluster] * vec));
 
