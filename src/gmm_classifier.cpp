@@ -79,7 +79,11 @@ ResultGmm gmm_classifier::pop_gmm_results()
         }
     }
   result.winner_mode = (Behaviors::MODE)Index;
-  Probabilities.normalize();
+  if(Probabilities != VectorXd::Zero(nBehaviors))
+    {
+      Probabilities.normalize();
+    }
+
   result.NormalizedProb = Probabilities;
 
   // Reset Values
