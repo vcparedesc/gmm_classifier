@@ -97,7 +97,7 @@ class gmm_classifier{
 private:
   int nFeatures;
   int nBehaviors;
-  int currentBehavior;
+
   double NDgaussian(Behaviors::MODE mode, int n_cluster, VectorXd features_vector);
 
   Behaviors::MODE current_mode;
@@ -112,6 +112,7 @@ public:
   void reset_probabilities();
 
   VectorXd Probabilities;
+  int currentBehavior;
 
 };
 

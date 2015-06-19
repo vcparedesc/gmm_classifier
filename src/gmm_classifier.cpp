@@ -2,15 +2,16 @@
 
 gmm_classifier::gmm_classifier()
 {
-  Models = new Modelp[3];
-  Probabilities = VectorXd::Zero(3);
+  Models = new Modelp[4];
+  Probabilities = VectorXd::Zero(4);
 
 	// Load Parameters using meta template
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Standing.yaml",Models[0]);
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Stand2Walk.yaml",Models[1]);
   BEHAVIOR<8>::Load("package://gmm_classifier/Models/Walk2Stand.yaml",Models[2]);
+  BEHAVIOR<8>::Load("package://gmm_classifier/Models/Walking.yaml",Models[3]);
 
-  nBehaviors = 3;
+  nBehaviors = 4;
   nFeatures = Models[0].mu.rows();
   Probabilities = VectorXd::Zero(nBehaviors);
 
@@ -89,6 +90,7 @@ ResultGmm gmm_classifier::pop_gmm_results()
   // Reset Values
   Probabilities = VectorXd::Zero(nBehaviors);
   current_mode = result.winner_mode;
+  currentBehavior = Index;
 
   return result;
 }
